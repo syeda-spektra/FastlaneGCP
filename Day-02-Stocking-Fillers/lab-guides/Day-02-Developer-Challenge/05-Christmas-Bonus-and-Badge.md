@@ -15,7 +15,7 @@
 - A tool can call other tools: it is just Python.
 - Holly should say it is an **estimate** (balance and rate unchanged, before tax).
 
-   <validation step="{{STEP_BONUS}}" />
+   <validation step="7e6ad4e9-373e-4f76-b3c4-d4a8034c3e1b" />
 
 ---
 

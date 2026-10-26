@@ -16,7 +16,7 @@ Hollyfield's core-banking API is built and deployed into your project the first 
    > - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
    > - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
 
-   <validation step="{{STEP_T1_READY}}" />
+   <validation step="dc4cd437-24d8-4382-8b99-5584d4892032" />
 
 ## 🔐 Enter the Ops Room
 
@@ -80,7 +80,7 @@ Hollyfield's core-banking API is built and deployed into your project the first 
    > - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
    > - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
 
-   <validation step="{{STEP_T1}}" />
+   <validation step="9d33a159-599e-4d1e-b91c-c75cc7cfd306" />
 
 ---
 
