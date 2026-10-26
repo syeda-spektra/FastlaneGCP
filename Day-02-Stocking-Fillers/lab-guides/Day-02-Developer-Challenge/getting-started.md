@@ -1,21 +1,42 @@
 <h1 align="center">🧦 Day 2: Stocking Fillers 🎁</h1>
-<p align="center"><b>❄️ 12 Days of AI Agents: The Christmas Change Freeze ❄️</b> | <b>🛷 Track A: Developer</b> | 🏆 <b>Challenge</b> | ⏱️ <b>Estimated Timing: 60 Minutes</b> | 🎯 <b>Points: 100 (+10 Christmas Bonus)</b> | 🎖️ <b>Badge: Toolsmith</b></p>
+<p align="center"><b>❄️ 12 Days of AI Agents: The Christmas Change Freeze ❄️</b> | <b>🛷 Track A: Developer</b> | 🏆 <b>Challenge</b> | ⏱️ <b>Estimated Timing: 60 Minutes</b> | 🎖️ <b>Badge: Toolsmith</b></p>
 <p align="center">🔔 ✨ 🦌 🎄 🦌 ✨ 🔔</p>
 
 ---
 
-## 🎄 About This Lab
+## 🎄 The Mission
 
-It's the busiest fortnight of the year at **Hollyfield Building Society** 🏦. Festive spending is up, savings-club payouts are due, and the Christmas change freeze starts on **Christmas Eve**.
+It's the busiest fortnight of the year at **Hollyfield Building Society** 🏦. Festive spending is up, savings-club payouts are due, and the Christmas change freeze starts on **Christmas Eve**. Yesterday you woke up **Holly**, Hollyfield's new customer agent. Today customers want their **real** balance, not a general answer.
 
-Yesterday you woke up **Holly**, Hollyfield's new customer agent. Today customers want their **real** balance, not a general answer. Your mission: give Holly her first **function tools**, so she can look up live balances and savings rates in Hollyfield's **core-banking API** on **Cloud Run**, and handle the moment a customer types the wrong account number.
+Hollyfield's contact centre is flooded with festive questions:
+
+- 💷 *"How much is in my Christmas Saver?"*
+- 📈 *"What rate does the Christmas Saver pay?"*
+- 🎁 *"What's my balance, and what rate am I getting?"*
+
+Holly can chat, but she can't see a single real number. Hollyfield's **core-banking API** already runs on **Cloud Run**. Your job is to give Holly **function tools** that call it, describe them so Gemini calls them correctly, and make sure a wrong account number never turns into a guessed balance.
+
+Hollyfield's one unbreakable rule: **Holly never invents a number.** Every balance and every rate must come from the core-banking API.
 
 **🧭 How this lab works**
 
-- 🎯 This is the **Challenge** version: each challenge gives you a **goal**, the **rules** your solution must follow and a few **hints**. There are no copy-and-paste steps. (The **Guided** version of Day 2 has step-by-step instructions, but earns fewer points.)
+- 🎯 This is the **Challenge** version: each task gives you a **goal**, the **rules** your solution must follow and a few **hints**. There are no copy-and-paste steps. (The **Guided** version of Day 2 has step-by-step instructions, but earns fewer points.)
 - ✅ The validators check your **result**, not the commands you used. Validate as often as you like; there is no penalty and no limit.
-- 🎄 The **Christmas Bonus** at the end is optional and earns extra points.
+- 🎄 The **Christmas Bonus** at the end is optional: try it if you have time left.
 - 🧠 A short Knowledge Check closes the lab.
+
+---
+
+## 🗺️ Today's Route
+
+| Stop | Task |
+|:---:|---|
+| 🔎 | **Task 1: Meet the Core-Banking API** – get your lab ready, then explore the API Holly will call |
+| 🛠️ | **Task 2: Write Holly's Tools** – a balance tool and a savings-rates tool |
+| 🧦 | **Task 3: Register and Test** – give Holly her tools and ask questions that need both |
+| ❓ | **Task 4: Account Not Found** – handle the wrong account number kindly |
+| 🎄 | **Christmas Bonus** – interest by New Year (optional) |
+| 🧠 | **Knowledge Check** – 3 questions |
 
 ---
 
@@ -38,12 +59,30 @@ Yesterday you woke up **Holly**, Hollyfield's new customer agent. Today customer
 
 ---
 
+## 🏗️ Today's Architecture
+
+```
+ You (Cloud Shell)
+   │  adk web / adk run
+   ▼
+ ┌──────────────────────────────┐  get_account_balance()   ┌─────────────────────────────────────┐
+ │ Holly (ADK agent, Python)    │  get_savings_rates()     │ Cloud Run: hollyfield-core-banking  │
+ │ Gemini 2.5 Flash, Vertex AI  │ ───────────────────────▶ │  /v1/accounts/<id>/balance          │
+ │ (us-central1)                │      HTTPS + JSON        │  /v1/savings/rates                  │
+ └──────────────┬───────────────┘                          └─────────────────────────────────────┘
+                │ Elf trace (callbacks)
+                ▼
+     Cloud Logging: holly-trace   (tool calls, results, answers)
+```
+
+---
+
 ## 🖥️ Lab Environment
 
 The lab window is split into two parts:
 
 - **Left side:** your lab virtual machine (VM), a Windows workstation with a browser.
-- **Right side:** the lab guide, with the challenges to complete.
+- **Right side:** the lab guide, with the tasks to complete.
 
 ![Lab layout](../media/gs-lab-layout1.png)
 
@@ -55,6 +94,19 @@ Your environment is an **isolated Google Cloud project** created only for you. A
 | 🌍 **Region** | <inject key="Region" enableCopy="true"/> |
 | 🧰 **Hollyfield workbench bucket** | <inject key="WorkbenchBucket" enableCopy="true"/> |
 | 🏦 **Core-banking API (Cloud Run service)** | <inject key="CoreBankingService" enableCopy="true"/> |
+| 👩 **Test customer** | **Eleanor Frost**, Christmas Saver account **HB-10234** |
+
+---
+
+## 📜 Holly's Tool Contract
+
+Every tool you write today must follow this contract. The validators depend on it.
+
+| Outcome | The tool returns |
+|---|---|
+| ✅ Success | a dict with `"status": "success"` and the data Holly needs |
+| ❌ Any failure | a dict with `"status": "error"`, an `"error_code"` (use the API's code, for example `ACCOUNT_NOT_FOUND`) and a short `"message"` |
+| 💥 Never | raising an exception |
 
 ---
 
@@ -111,7 +163,7 @@ Use **Previous**, the page numbers and **Next** at the bottom of the guide to mo
 
 ## ✅ Validate Your Work
 
-1. Complete the challenge.
+1. Complete the task.
 1. Scroll to the **Validation Check** under it.
 1. Click **Validate**.
 
@@ -120,7 +172,7 @@ Use **Previous**, the page numbers and **Next** at the bottom of the guide to mo
 - 🎉 On success, the status shows **Success** and the points are added to your **Progress**.
 - 🔧 If a check fails, read the message, fix the issue and click **Validate** again.
 
-> 💡 **Tip:** The first task, **Prepare Hollyfield**, is also a **Validate** button. Click it before anything else. It builds Hollyfield's core-banking API, which takes **3–4 minutes** the first time.
+> 💡 **Tip:** Task 1 starts with a **lab readiness check**. Click its **Validate** button before anything else and wait for **Success**: it builds Hollyfield's core-banking API, which takes **3–4 minutes** the first time.
 
 ---
 
@@ -162,6 +214,6 @@ The CloudLabs support team is available 24/7 via email and live chat.
 
 ---
 
-Click **Next** to head to Hollyfield's operations room. 🏦
+Click **Next** to start **Task 1: Meet the Core-Banking API**. 🔎
 
 ## 🎄 Happy Learning, and Merry Christmas! 🎅

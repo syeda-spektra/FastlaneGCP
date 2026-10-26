@@ -1,14 +1,14 @@
 <#
  CloudLabs validation | LAB02A-EX1-TASK1
- Prepare Hollyfield   (5 points)
+ Task 1: Lab Readiness Check   (5 points)
  Lab: Day 2 - Stocking Fillers (Track A: Developer, Challenge)
 
- Script Type : PowerShellV2      Run As : System
+ Script Type : PowerShell        Run As : System
  Parameters  : DeploymentId = GET-DEPLOYMENT-ID (System)
                projectname  = GET-GCP-PROJECT   (System)
 
  Passes when:
-   - Hollyfield services on, Artifact Registry repo + builder permissions in place,
+   - Lab services on, Artifact Registry repo + builder permissions in place,
      core-banking API built (Cloud Build) and Ready on Cloud Run (safe to run again;
      waits up to 150 s, then asks the learner to validate again)
 #>
@@ -150,10 +150,10 @@ try {
                 $last = @(gcloud builds list --project $projectname --region $region --filter="tags=hollyfield-core-banking" --sort-by="~createTime" --limit 1 --format="value(id,status)" 2>$null) | Select-Object -First 1
                 Write-Host "Latest build: $last"
                 if ("$last" -match "FAILURE|TIMEOUT|INTERNAL_ERROR|CANCELLED") {
-                    $message = New-Result "Failed" "The core-banking API build did not finish ($last). Please validate again: the elves will rebuild it."
+                    $message = New-Result "Failed" "The core-banking API build did not finish ($last). Please validate again: it will be rebuilt."
                 }
                 else {
-                    $message = New-Result "Failed" "The elves are still building the core-banking API (about 3-4 minutes the first time). Please wait 2 minutes and validate again."
+                    $message = New-Result "Failed" "The core-banking API is still being built (about 3-4 minutes the first time). Please wait 2 minutes and validate again."
                 }
             }
         }
@@ -162,7 +162,7 @@ try {
 catch {
     Write-Host "`nERROR:"
     Write-Host $_
-    $message = New-Result "Failed" "The elves could not finish the check. Please wait a minute and validate again. Details: $_"
+    $message = New-Result "Failed" "The check could not finish. Please wait a minute and validate again. Details: $_"
 }
 
 Write-Host "`n=== FINAL RESPONSE ==="

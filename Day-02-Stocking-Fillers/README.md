@@ -10,7 +10,7 @@ Learners give **Holly** (Hollyfield's ADK customer agent) her first **function t
 | Version | Challenge (goal + rules + hints). Guided version: separate package |
 | Start point | Fresh starter (no dependency on Day 1) |
 | Region / model | `us-central1` · Gemini 2.5 Flash on Vertex AI (`AGENT_MODEL` env var overrides) |
-| Points | 94 validation + 6 questions = **100**, plus **+10** optional Christmas Bonus |
+| Points | 94 validation + 6 questions = **100** (Christmas Bonus: optional, 0 points) |
 | Badge | 🎖️ Toolsmith |
 
 ## 1. Publish
@@ -18,7 +18,7 @@ Learners give **Holly** (Hollyfield's ADK customer agent) her first **function t
 1. Push the **contents** of this folder to the root of the lab repo (branch `main`).
 1. Fill in the raw URLs: `./scripts/set-ids.sh <owner>/<repo>`
 1. Create the CloudLabs template and validation steps (below), then fill in the step IDs:
-   `./scripts/set-ids.sh <owner>/<repo> EX1=<id> EX2=<id> EX3=<id> EX4=<id> EX5=<id> EX6=<id>`
+   `./scripts/set-ids.sh <owner>/<repo> T1_READY=<id> T1=<id> T2=<id> T3=<id> T4=<id> BONUS=<id>`
 1. Commit and push again. The script lists anything still unfilled.
 
 ## 2. CloudLabs template
@@ -40,18 +40,21 @@ The lab VM settings are the same as Day 1: VM `labvm-{GET-DEPLOYMENT-ID}`, outpu
 
 ## 3. Validation steps
 
-All steps: **PowerShellV2**, **Run As System**, parameters `DeploymentId = GET-DEPLOYMENT-ID`, `projectname = GET-GCP-PROJECT`.
+All steps: **Custom Validation**, Script Type **PowerShell**, **Run As System**, parameters `DeploymentId = GET-DEPLOYMENT-ID`, `projectname = GET-GCP-PROJECT`.
 
-| # | Step name | Script | Score | Passes when |
-|:---:|---|---|:---:|---|
-| EX1 | Prepare Hollyfield | `validation/LAB02A-EX1-TASK1.ps1` | 5 | APIs on, builder IAM set, core-banking API built by Cloud Build and **Ready** on Cloud Run. Safe to re-run; waits up to 150 s, then asks the learner to validate again |
-| EX2 | Explore the Core-Banking API | `validation/LAB02A-EX2-TASK1.ps1` | 10 | Cloud Run request logs show rates 200, a balance 200 and an unknown-account 404 |
-| EX3 | Holly Uses Her Tools | `validation/LAB02A-EX3-TASK1.ps1` | 35 | `holly-trace`: balance of HB-10234 ✔, rates ✔, both tools in **one** turn ✔, an answer quotes 4.10 % ✔ |
-| EX4 | Holly Handles an Unknown Account | `validation/LAB02A-EX4-TASK1.ps1` | 25 | `holly-trace`: `ACCOUNT_NOT_FOUND` returned (no exception), and Holly's reply in that turn has no £ amount |
-| EX5 | Holly's Tools Pass Code Review | `validation/LAB02A-EX5-TASK1.ps1` | 19 | `gs://<workbench>/app/holly`: both tools defined, documented and registered; `error_code` used; trace callbacks intact; no hard-coded balance |
-| EX6 | Christmas Bonus: Interest by New Year | `validation/LAB02A-EX6-TASK1.ps1` | 10 (bonus) | `holly-trace`: a tool whose name contains `interest` succeeded for an HB account |
+| Guide page | Step name | Script | Score | Passes when |
+|---|---|---|:---:|---|
+| Task 1 | Lab Readiness Check | `validation/LAB02A-EX1-TASK1.ps1` | 5 | APIs on, builder IAM set, core-banking API built by Cloud Build and **Ready** on Cloud Run. Safe to re-run; waits up to 150 s, then asks the learner to validate again |
+| Task 1 | Explore the Core-Banking API | `validation/LAB02A-EX1-TASK2.ps1` | 15 | Cloud Run request logs show rates 200, a balance 200 and an unknown-account 404 |
+| Task 2 | Holly's Tools Are Written | `validation/LAB02A-EX2-TASK1.ps1` | 25 | `gs://<workbench>/app/holly`: both tools defined with docstrings; `error_code` used; trace callbacks intact; no hard-coded balance |
+| Task 3 | Holly Uses Both Tools | `validation/LAB02A-EX3-TASK1.ps1` | 30 | `holly-trace`: balance of HB-10234 ✔, rates ✔, both tools in **one** turn ✔, an answer quotes 4.10 % ✔ |
+| Task 4 | Holly Handles an Unknown Account | `validation/LAB02A-EX4-TASK1.ps1` | 19 | `holly-trace`: `ACCOUNT_NOT_FOUND` returned (no exception), and Holly's reply in that turn has no £ amount |
+| Christmas Bonus | Christmas Bonus: Interest by New Year | `validation/LAB02A-BONUS-TASK1.ps1` | **0** (optional, tracks completion only) | `holly-trace`: a tool whose name contains `interest` succeeded for an HB account |
 
-Questions: 3 × 2 points (`lab-guides/Day-02-Developer-Challenge/Inline-Questions`). If the platform can't score above 100, set EX6 to 0 points or move its 10 points into EX3.
+Questions: 3 × 2 points. Total 94 + 6 = **100**. The bonus scores 0.
+
+Guide placeholders to fill with the CloudLabs step IDs: `{{STEP_T1_READY}}`, `{{STEP_T1}}`, `{{STEP_T2}}`, `{{STEP_T3}}`, `{{STEP_T4}}`, `{{STEP_BONUS}}`
+(`./scripts/set-ids.sh syeda-spektra/FastlaneGCP T1_READY=<id> T1=<id> T2=<id> T3=<id> T4=<id> BONUS=<id>`).
 
 **How validation works.** The starter's **Elf trace** registers three ADK callbacks: `after_tool_callback`, `on_tool_error_callback` and `after_model_callback`. They write every tool call (tool, args, status, error_code, invocation_id) and every final answer to the Cloud Logging log **`holly-trace`**. Validators read that log, plus the API's own Cloud Run request logs, so they check what Holly actually did rather than what the learner typed.
 
@@ -86,8 +89,8 @@ deployment/          deploy.yaml, param.yaml (Deployment Manager)
 core-banking-api/    mock API: main.py, data, Dockerfile, cloudbuild.yaml
 starter/             learner starter: agent.py (TODOs + Elf trace), __init__.py, requirements.txt
 solution/            answer key (incl. bonus tool)
-lab-guides/          getting-started, challenge guide, knowledge check, questions, masterdoc, media
-validation/          LAB02A-EX1..EX6 PowerShellV2 validators, monitor.sh (support diagnostics)
+lab-guides/          getting-started, Task 1-4 + Bonus pages, knowledge check, questions, masterdoc, media
+validation/          LAB02A-EX1..EX4 + BONUS PowerShell validators, monitor.sh (support diagnostics)
 instructor/          end-to-end answer key with commands
 scripts/set-ids.sh   fills raw URLs and validation step IDs
 ```

@@ -1,16 +1,16 @@
 <#
  CloudLabs validation | LAB02A-EX2-TASK1
- Explore the Core-Banking API   (10 points)
+ Task 2: Holly's Tools Are Written   (25 points)
  Lab: Day 2 - Stocking Fillers (Track A: Developer, Challenge)
 
- Script Type : PowerShellV2      Run As : System
+ Script Type : PowerShell        Run As : System
  Parameters  : DeploymentId = GET-DEPLOYMENT-ID (System)
                projectname  = GET-GCP-PROJECT   (System)
 
  Passes when:
-   - Cloud Run request logs of hollyfield-core-banking (last 120 min) show:
-     GET /v1/savings/rates (200), GET /v1/accounts/HB-xxxxx/balance (200)
-     and a 404 for an unknown account
+   - gs://<workbench>/app/holly has agent.py + requirements.txt; get_account_balance and
+     get_savings_rates defined with docstrings (balance one describes account_id / HB-12345);
+     error_code contract used; trace callbacks intact; no hard-coded balances
 #>
 param(
     [string]$DeploymentId,
@@ -74,37 +74,55 @@ try {
     Write-Host "Project: $projectname | DeploymentId: $DeploymentId"
     gcloud config set project $projectname --quiet 2>$null | Out-Null
 
-    $url = Get-ServiceUrl
-    if (-not $url) {
-        $message = New-Result "Failed" "The core-banking API is not live yet. Validate the 'Prepare Hollyfield' task first."
+    $bench = Get-Workbench
+    $code = if ($bench) { (gcloud storage cat "gs://$bench/app/holly/agent.py" --project $projectname 2>$null | Out-String) } else { "" }
+    $reqs = if ($bench) { (gcloud storage cat "gs://$bench/app/holly/requirements.txt" --project $projectname 2>$null | Out-String) } else { "" }
+
+    function Get-Docstring([string]$Code, [string]$Name) {
+        $m = [regex]::Match($Code, '(?s)def\s+' + $Name + '\s*\([^)]*\)[^:\n]*:\s*[rRuU]?("""|'''''')(.*?)\1')
+        if ($m.Success) { return $m.Groups[2].Value.Trim() }
+        return $null
+    }
+
+    if (-not $code.Trim()) {
+        $message = New-Result "Failed" "Holly's code was not found. Upload agent.py, __init__.py and requirements.txt to gs://$bench/app/holly."
+    }
+    elseif (-not $reqs.Trim()) {
+        $message = New-Result "Failed" "requirements.txt is missing from gs://$bench/app/holly. Upload the whole holly folder."
     }
     else {
-        $requests = @(Get-ApiRequests -Minutes 120)
-        $rates = @($requests | Where-Object { $_.jsonPayload.path -eq "/v1/savings/rates" -and [int]$_.jsonPayload.status -eq 200 })
-        $balances = @($requests | Where-Object { $_.jsonPayload.path -match '(?i)^/v1/accounts/HB-\d{5}/balance$' -and [int]$_.jsonPayload.status -eq 200 })
-        $missing = @($requests | Where-Object { [int]$_.jsonPayload.status -eq 404 -and $_.jsonPayload.path -match '(?i)^/v1/accounts/' })
-        Write-Host "API requests: $($requests.Count) | rates 200: $($rates.Count) | balance 200: $($balances.Count) | account 404: $($missing.Count)"
-        if ($requests.Count -eq 0) {
-            $message = New-Result "Failed" "No requests have reached the core-banking API yet. Call its endpoints from Cloud Shell, wait 1 minute, then validate again."
+        $balanceDoc = Get-Docstring $code "get_account_balance"
+        $ratesDoc   = Get-Docstring $code "get_savings_rates"
+        $toolsList  = [regex]::Match($code, '(?s)tools\s*=\s*\[([^\]]*)\]').Groups[1].Value
+        Write-Host "balance docstring: $(if ($balanceDoc) { $balanceDoc.Length } else { 0 }) chars | rates docstring: $(if ($ratesDoc) { $ratesDoc.Length } else { 0 }) chars | tools: $toolsList"
+
+        if ($code -notmatch 'def\s+get_account_balance\s*\(' -or $code -notmatch 'def\s+get_savings_rates\s*\(') {
+            $message = New-Result "Failed" "Holly's code must define get_account_balance and get_savings_rates."
         }
-        elseif ($rates.Count -eq 0) {
-            $message = New-Result "Failed" "You have not read the savings rates yet. Call the rates endpoint, wait 1 minute, then validate again."
+        elseif ($code -notmatch 'after_tool_callback\s*=\s*trace_tool_call' -or $code -notmatch 'after_model_callback\s*=\s*trace_answer' -or $code -notmatch 'on_tool_error_callback\s*=\s*trace_tool_crash') {
+            $message = New-Result "Failed" "Holly's Elf trace callbacks were removed or changed. Put back the three callback lines from the starter file."
         }
-        elseif ($balances.Count -eq 0) {
-            $message = New-Result "Failed" "You have not read an account balance yet. Call the balance endpoint for a real Hollyfield account, wait 1 minute, then validate again."
+        elseif (-not $balanceDoc -or $balanceDoc.Length -lt 80 -or $balanceDoc -notmatch 'account_id' -or $balanceDoc -notmatch '(?i)HB-') {
+            $message = New-Result "Failed" "get_account_balance needs a fuller docstring: say when to use it and describe account_id, including its HB-12345 format."
         }
-        elseif ($missing.Count -eq 0) {
-            $message = New-Result "Failed" "You have not seen how the API reports an unknown account yet. Ask for the balance of an account that does not exist, wait 1 minute, then validate again."
+        elseif (-not $ratesDoc -or $ratesDoc.Length -lt 60) {
+            $message = New-Result "Failed" "get_savings_rates needs a fuller docstring that tells Gemini when to use it."
+        }
+        elseif ($code -notmatch 'error_code') {
+            $message = New-Result "Failed" "Holly's tools do not return an error_code. Follow Holly's tool contract for errors."
+        }
+        elseif ($code -match '812\.4|2450\.0|2,450') {
+            $message = New-Result "Failed" "Holly's code contains a hard-coded balance. Every number must come from the core-banking API."
         }
         else {
-            $message = New-Result "Succeeded" "You explored the core-banking API: rates, a balance and an unknown account."
+            $message = New-Result "Succeeded" "Holly's balance and savings-rates tools are written: clear docstrings, the tool contract and the trace are in place, and no numbers are hard-coded."
         }
     }
 }
 catch {
     Write-Host "`nERROR:"
     Write-Host $_
-    $message = New-Result "Failed" "The elves could not finish the check. Please wait a minute and validate again. Details: $_"
+    $message = New-Result "Failed" "The check could not finish. Please wait a minute and validate again. Details: $_"
 }
 
 Write-Host "`n=== FINAL RESPONSE ==="

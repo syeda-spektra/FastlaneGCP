@@ -1,6 +1,6 @@
 # 🔑 Instructor Answer Key – Day 2: Stocking Fillers (Developer, Challenge)
 
-> Not part of the learner guide. Use it to test the lab end to end. Run in Cloud Shell after **Prepare Hollyfield** succeeds.
+> Not part of the learner guide. Use it to test the lab end to end. Run in Cloud Shell after the **Task 1 lab readiness check** succeeds.
 
 ## Hollyfield toolkit
 
@@ -13,7 +13,7 @@ python3 -m venv ~/holly-venv && source ~/holly-venv/bin/activate
 pip install --quiet --upgrade google-adk google-cloud-logging requests
 ```
 
-## Challenge 2 – Meet the Core-Banking API
+## Task 1 – Meet the Core-Banking API (after the readiness check succeeds)
 
 ```bash
 curl -s "$API_URL/v1/savings/rates" | jq
@@ -25,7 +25,7 @@ curl -s -w '\nHTTP %{http_code}\n' "$API_URL/v1/accounts/12345/balance"      # 4
 
 Answers: HB-10234 = Christmas Saver, £812.40 · Christmas Saver = 4.10 % AER, variable · unknown account = HTTP 404 `ACCOUNT_NOT_FOUND` · `12345` = HTTP 400 `INVALID_ACCOUNT_ID`.
 
-## Challenge 3 – Stocking Fillers
+## Tasks 2 and 3 – Write Holly's Tools, Register and Test
 
 ```bash
 REPO=https://raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers
@@ -45,7 +45,7 @@ ask "For HB-10234, what's my balance and what rate am I getting?"
 # wait 1 minute, then Validate
 ```
 
-## Challenge 4 – Account Not Found
+## Task 4 – Account Not Found
 
 ```bash
 ask "What's the balance on account HB-99999?"
@@ -53,7 +53,7 @@ ask "What's the balance on account HB-99999?"
 # wait 1 minute, then Validate
 ```
 
-## Challenge 5 – Wrap the Gift
+## Task 2 check – upload the code (any time after Task 2)
 
 ```bash
 gcloud storage cp ~/holly/agent.py ~/holly/__init__.py ~/holly/requirements.txt gs://$BENCH/app/holly/

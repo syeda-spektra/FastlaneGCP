@@ -1,9 +1,9 @@
 <#
- CloudLabs validation | LAB02A-EX6-TASK1
- Christmas Bonus: Interest by New Year   (10 points)
+ CloudLabs validation | LAB02A-BONUS-TASK1
+ Christmas Bonus: Interest by New Year   (0 points)
  Lab: Day 2 - Stocking Fillers (Track A: Developer, Challenge)
 
- Script Type : PowerShellV2      Run As : System
+ Script Type : PowerShell        Run As : System
  Parameters  : DeploymentId = GET-DEPLOYMENT-ID (System)
                projectname  = GET-GCP-PROJECT   (System)
 
@@ -90,7 +90,7 @@ try {
 catch {
     Write-Host "`nERROR:"
     Write-Host $_
-    $message = New-Result "Failed" "The elves could not finish the check. Please wait a minute and validate again. Details: $_"
+    $message = New-Result "Failed" "The check could not finish. Please wait a minute and validate again. Details: $_"
 }
 
 Write-Host "`n=== FINAL RESPONSE ==="
