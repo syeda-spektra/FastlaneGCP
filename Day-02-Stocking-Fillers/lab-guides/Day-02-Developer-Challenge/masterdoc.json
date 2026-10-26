@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "Day 2: Stocking Fillers (Developer, Challenge)",
+    "Language": "English",
+    "Files": [
+      {
+        "RawFilePath": "https://raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/getting-started.md",
+        "Order": 1
+      },
+      {
+        "RawFilePath": "https://raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/Day-02-Stocking-Fillers.md",
+        "Order": 2
+      },
+      {
+        "RawFilePath": "https://raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/knowledge-check.md",
+        "Order": 3
+      }
+    ]
+  }
+]
