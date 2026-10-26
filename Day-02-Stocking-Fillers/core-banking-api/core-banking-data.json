@@ -1,0 +1,55 @@
+{
+  "society": "Hollyfield Building Society",
+  "notice": "Synthetic training data. Not real customers, accounts or rates.",
+  "version": "2026-12",
+  "rates_effective_from": "2026-12-01",
+  "products": [
+    {
+      "product_code": "XMAS-SAVER",
+      "product_name": "Christmas Saver",
+      "aer_percent": 4.10,
+      "rate_type": "variable",
+      "interest_paid": "annually on 1 November",
+      "rules": "Pay in up to GBP 5,000 a year. Withdrawals from 1 November without penalty."
+    },
+    {
+      "product_code": "EASY-ACCESS",
+      "product_name": "Easy Access Saver",
+      "aer_percent": 3.25,
+      "rate_type": "variable",
+      "interest_paid": "monthly",
+      "rules": "Withdraw at any time. No minimum balance."
+    },
+    {
+      "product_code": "FESTIVE-REGULAR",
+      "product_name": "Festive Regular Saver",
+      "aer_percent": 5.00,
+      "rate_type": "fixed for 12 months",
+      "interest_paid": "at maturity",
+      "rules": "Pay in GBP 25 to GBP 250 each month. One withdrawal allowed during the term."
+    }
+  ],
+  "accounts": [
+    {
+      "account_id": "HB-10234",
+      "account_holder": "Eleanor Frost",
+      "product_code": "XMAS-SAVER",
+      "balance": 812.40,
+      "available_balance": 812.40
+    },
+    {
+      "account_id": "HB-20419",
+      "account_holder": "Noel Winters",
+      "product_code": "EASY-ACCESS",
+      "balance": 2450.00,
+      "available_balance": 2450.00
+    },
+    {
+      "account_id": "HB-31877",
+      "account_holder": "Carol Bell",
+      "product_code": "FESTIVE-REGULAR",
+      "balance": 600.00,
+      "available_balance": 600.00
+    }
+  ]
+}

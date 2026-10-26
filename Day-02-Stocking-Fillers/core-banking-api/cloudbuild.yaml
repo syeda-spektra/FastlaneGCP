@@ -1,0 +1,39 @@
+# Builds the mock core-banking API and deploys it to Cloud Run.
+# Submitted by the "Prepare Hollyfield" validation step (runs as CloudLabs System)
+# with the hollyfield-builder service account.
+substitutions:
+  _REGION: us-central1
+  _SERVICE: hollyfield-core-banking
+  _REPO: hollyfield
+  _RUNTIME_SA: core-banking-sa
+tags: ['hollyfield-core-banking']
+steps:
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args: ['build', '-t', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:2026-12', '.']
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:2026-12']
+  - id: deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:2026-12
+      - --region=${_REGION}
+      - --service-account=${_RUNTIME_SA}@$PROJECT_ID.iam.gserviceaccount.com
+      - --allow-unauthenticated
+      - --min-instances=0
+      - --max-instances=2
+      - --memory=256Mi
+      - --cpu=1
+      - --concurrency=40
+      - --labels=lab=hollyfield-day02
+      - --quiet
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:2026-12'
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: 900s
