@@ -4,31 +4,31 @@
     "Language": "English",
     "Files": [
       {
-        "RawFilePath": "https://docs-api.cloudlabs.ai/repos/raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/getting-started.md",
+        "RawFilePath": "https://raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/getting-started.md",
         "Order": 1
       },
       {
-        "RawFilePath": "https://docs-api.cloudlabs.ai/repos/raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/01-Task-1-Meet-the-Core-Banking-API-Presales.md",
+        "RawFilePath": "https://raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/01-Task-1-Meet-the-Core-Banking-API-Presales.md",
         "Order": 2
       },
       {
-        "RawFilePath": "https://docs-api.cloudlabs.ai/repos/raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/02-Task-2-Write-Hollys-Tools-Presales.md",
+        "RawFilePath": "https://raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/02-Task-2-Write-Hollys-Tools-Presales.md",
         "Order": 3
       },
       {
-        "RawFilePath": "https://docs-api.cloudlabs.ai/repos/raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/03-Task-3-Register-and-Test-Presales.md",
+        "RawFilePath": "https://raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/03-Task-3-Register-and-Test-Presales.md",
         "Order": 4
       },
       {
-        "RawFilePath": "https://docs-api.cloudlabs.ai/repos/raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/04-Task-4-Account-Not-Found-Presales.md",
+        "RawFilePath": "https://raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/04-Task-4-Account-Not-Found-Presales.md",
         "Order": 5
       },
       {
-        "RawFilePath": "https://docs-api.cloudlabs.ai/repos/raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/05-Christmas-Bonus-and-Badge-Presales.md",
+        "RawFilePath": "https://raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/05-Christmas-Bonus-and-Badge-Presales.md",
         "Order": 6
       },
       {
-        "RawFilePath": "https://docs-api.cloudlabs.ai/repos/raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/knowledge-check.md",
+        "RawFilePath": "https://raw.githubusercontent.com/syeda-spektra/FastlaneGCP/refs/heads/main/Day-02-Stocking-Fillers/lab-guides/Day-02-Developer-Challenge/knowledge-check.md",
         "Order": 7
       }
     ]
